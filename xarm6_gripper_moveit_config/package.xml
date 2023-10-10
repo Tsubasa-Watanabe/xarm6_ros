@@ -31,5 +31,8 @@
   <run_depend>xarm_description</run_depend>
   <run_depend>ros_controllers</run_depend>
   <run_depend>ros_control</run_depend>
+  <build_depend>roscpp</build_depend>
+  <run_depend>roscpp</run_depend>
+
 
 </package>
