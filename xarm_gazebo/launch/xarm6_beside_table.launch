@@ -19,6 +19,7 @@
     <arg name="world_name" value="$(find xarm_gazebo)/worlds/xarm_example1_table.world"/>
     <arg name="paused" value="$(arg paused)"/>
     <arg name="gui" value="$(arg gui)"/>
+    <arg name="use_sim_time" value="true"/>
   </include>
 
   <!-- send robot urdf to param server, joint limit may be overwritten if use moveit planner -->
