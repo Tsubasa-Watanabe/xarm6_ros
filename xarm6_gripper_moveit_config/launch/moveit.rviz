@@ -53,7 +53,7 @@ Visualization Manager:
       MoveIt_Allow_Sensor_Positioning: false
       MoveIt_Goal_Tolerance: 0
       MoveIt_Planning_Attempts: 10
-      MoveIt_Planning_Time: 5
+      MoveIt_Planning_Time: 10
       MoveIt_Use_Constraint_Aware_IK: true
       MoveIt_Warehouse_Host: 127.0.0.1
       MoveIt_Warehouse_Port: 33829
@@ -151,7 +151,7 @@ Visualization Manager:
             Show Trail: false
             Value: true
         Loop Animation: false
-        Robot Alpha: 0.5
+        Robot Alpha: 1.0
         Robot Color: 150; 50; 150
         Show Robot Collision: false
         Show Robot Visual: true
@@ -269,7 +269,7 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-        Robot Alpha: 0.5
+        Robot Alpha: 1.0
         Show Robot Collision: false
         Show Robot Visual: true
       Value: true
