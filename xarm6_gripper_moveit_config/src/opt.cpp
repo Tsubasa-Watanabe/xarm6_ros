@@ -11,10 +11,10 @@ int main(int argc, char **argv)
     ros::AsyncSpinner spinner(1);
     spinner.start();
     moveit::planning_interface::MoveGroupInterface group("xarm6");
+
     // trajectoryの指定
     moveit_msgs::RobotTrajectory trajectory;
-    trajectory_msgs::JointTrajectory joint_trajectory;
-    joint_trajectory.joint_names = {"joint1", "joint2", "joint3", "joint4", "joint5", "joint6"};
+    trajectory.joint_trajectory.joint_names = {"joint1", "joint2", "joint3", "joint4", "joint5", "joint6"};
 
     std::vector<std::vector<double>> waypoints = {
         {4.361691394816347e-05, -4.549517718466234e-05, -7.679402761073817e-05, 9.749420298188483e-05, -9.865705155043258e-06, -7.692414441429207e-06},
@@ -61,10 +61,9 @@ int main(int argc, char **argv)
     for (const auto& waypoint : waypoints) {
         trajectory_msgs::JointTrajectoryPoint point;
         point.positions = waypoint;
-        joint_trajectory.points.push_back(point);
+        trajectory.joint_trajectory.points.push_back(point);
     }
-    trajectory.joint_trajectory = joint_trajectory;
-    
+
     // 目標関節角度の指定
     std::map<std::string, double> joint_values;
     joint_values["joint1"] = 1.0031064240644607;
@@ -74,38 +73,32 @@ int main(int argc, char **argv)
     joint_values["joint5"] = 1.3187745130631479;
     joint_values["joint6"] = 1.0020974406663496;
 
-    moveit:: planning_interface::MoveGroupInterface::Plan new_plan;
+    moveit::planning_interface::MoveGroupInterface::Plan new_plan;
     new_plan.trajectory_ = trajectory;
-    std::size_t num_of_points = trajectory.joint_trajectory.points.size();
-    std::vector<moveit_msgs::Constraints> all_joint_constrains;
-    moveit_msgs::TrajectoryConstraints initial_traj;
-    
-    for (int j = 0; j<num_of_points; j++)
-    {
-        std::vector<moveit_msgs::JointConstraint> joint_constraints_at_t;
-        for (const auto& kv : joint_values) {
-        moveit_msgs::JointConstraint joint_con;
-        joint_con.joint_name = kv.first;
-        joint_con.position = kv.second;
-        joint_con.weight = 1;
-        joint_constraints_at_t.push_back(joint_con);
-        }
 
-    moveit_msgs::Constraints con;
-    con.joint_constraints = joint_constraints_at_t;
-    all_joint_constrains.push_back(con);
+    // ウェイポイントを通過するようにパス制約を設定
+    moveit_msgs::Constraints path_constraints;
+    for (int i = 0; i < trajectory.joint_trajectory.joint_names.size(); ++i) {
+        moveit_msgs::JointConstraint joint_constraint;
+        joint_constraint.joint_name = trajectory.joint_trajectory.joint_names[i];
+        joint_constraint.position = waypoints[0][i];  // ウェイポイントの値
+        joint_constraint.tolerance_above = 0.01;  // 適切な値に調整
+        joint_constraint.tolerance_below = 0.01;  // 適切な値に調整
+        joint_constraint.weight = 1.0;
+        path_constraints.joint_constraints.push_back(joint_constraint);
     }
 
-    initial_traj.constraints = all_joint_constrains;
-    robot_state::RobotState robot_state_start(*group.getCurrentState());
-    group.setStartState(robot_state_start);
-    group.setTrajectoryConstraints (initial_traj);
-    group.setJointValueTarget (joint_values);
-    bool success2 = (group.plan(new_plan) == moveit:: planning_interface::MoveItErrorCode::SUCCESS);
-    if (success2)
-    {
-        ROS_WARN("Successs to make optimized path!");
-        group.execute(new_plan);
+    // パス制約を設定した状態でプランを生成
+    group.setStartStateToCurrentState();
+    group.setJointValueTarget(joint_values);
+    group.setPathConstraints(path_constraints);
+    bool success = (group.plan(new_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+
+    if (success) {
+        ROS_WARN("Success to make optimized path!");
+        group.execute(new_plan);  // constraintsを使用する代わりに直接new_planを渡します
+    } else {
+        ROS_ERROR("Failed to plan a path!");
     }
-    return 0;
 }
+
