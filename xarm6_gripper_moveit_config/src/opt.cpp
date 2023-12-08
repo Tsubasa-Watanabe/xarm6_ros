@@ -88,6 +88,17 @@ int main(int argc, char **argv)
         path_constraints.joint_constraints.push_back(joint_constraint);
     }
 
+    // 1. MoveItのgetCurrentState関数を使用して、現在の start_state を取得する
+    moveit::core::RobotStatePtr current_state = group.getCurrentState();
+
+    // 2. 取得した start_state から、sensor_msgs/JointState メッセージを作成する
+    sensor_msgs::JointState start_state_msg;
+    start_state_msg.name = current_state->getJointModelGroup("xarm6")->getVariableNames();
+    start_state_msg.position = current_state->getVariablePositions();
+
+    // 3. 作成した sensor_msgs/JointState メッセージを、MotionPlanRequest の start_state フィールドに設定する
+    trajectory.start_state.joint_state = start_state_msg;
+
     // パス制約を設定した状態でプランを生成
     group.setStartStateToCurrentState();
     group.setJointValueTarget(joint_values);
