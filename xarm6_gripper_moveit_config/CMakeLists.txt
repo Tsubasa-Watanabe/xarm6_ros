@@ -6,12 +6,13 @@ find_package(catkin REQUIRED COMPONENTS
   moveit_core
   moveit_ros_planning
   moveit_ros_planning_interface
+  stomp_moveit
 )
 
 include_directories("/usr/include/eigen3")
 
 catkin_package(
-  CATKIN_DEPENDS roscpp roscpp moveit_core moveit_ros_planning moveit_ros_planning_interface
+  CATKIN_DEPENDS roscpp roscpp moveit_core moveit_ros_planning moveit_ros_planning_interface stomp_moveit
 )
 
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
@@ -24,6 +25,6 @@ add_executable(stomp_origin src/stomp_origin.cpp)
 target_link_libraries(stomp_origin ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 install(TARGETS stomp_origin DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
-add_executable(stomp_req src/req.cpp)
+add_executable(stomp_req src/stomp_req.cpp)
 target_link_libraries(stomp_req ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 install(TARGETS stomp_req DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
