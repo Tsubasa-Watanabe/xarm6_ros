@@ -13,6 +13,7 @@ Panels:
         - /MotionPlanning1/Planning Metrics1
         - /MotionPlanning1/Planned Path1
         - /MotionPlanning1/Planned Path1/Links1
+        - /MarkerArray1
       Splitter Ratio: 0.742560029
     Tree Height: 405
   - Class: rviz/Help
@@ -150,7 +151,7 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-        Loop Animation: false
+        Loop Animation: true
         Robot Alpha: 1.0
         Robot Color: 150; 50; 150
         Show Robot Collision: false
@@ -274,6 +275,10 @@ Visualization Manager:
         Show Robot Visual: true
       Value: true
       Velocity_Scaling_Factor: 1
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /stomp_trajectories
+      Name: MarkerArray
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -328,3 +333,4 @@ Window Geometry:
   Width: 1828
   X: 92
   Y: 24
+
