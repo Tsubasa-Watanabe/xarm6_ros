@@ -23,7 +23,7 @@ stomp/xarm6:
         lock_start: True
         lock_goal: True
       - class: stomp_moveit/MultiTrajectoryVisualization
-        line_width: 0.005
+        line_width: 0.002
         rgb: [255, 255, 0]
         marker_array_topic: stomp_trajectories
         marker_namespace: noisy
@@ -31,7 +31,7 @@ stomp/xarm6:
       - class: stomp_moveit/PolynomialSmoother
         poly_order: 6
       - class: stomp_moveit/TrajectoryVisualization
-        line_width: 0.05
+        line_width: 0.002
         rgb: [0, 191, 255]
         error_rgb: [255, 0, 0]
         publish_intermediate: True
